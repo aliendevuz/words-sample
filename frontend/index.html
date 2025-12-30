@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Atlas | Responsive SPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0f172a;
+            --paper: #0b1223;
+            --card: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.12);
+            --accent: #4fd1c5;
+            --accent-strong: #f59e0b;
+            --muted: #94a3b8;
+            --text: #e2e8f0;
+            --shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', 'Manrope', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(120% 120% at 10% 10%, rgba(79, 209, 197, 0.12), transparent),
+                                    radial-gradient(120% 120% at 90% 20%, rgba(245, 158, 11, 0.12), transparent),
+                                    linear-gradient(160deg, #0a0f1c 0%, #0c1a33 50%, #091020 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .app-shell {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px clamp(18px, 3vw, 32px) 48px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(14px);
+            background: rgba(7, 11, 20, 0.8);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            display: grid;
+            place-items: center;
+            color: #0b1120;
+            font-weight: 800;
+            box-shadow: 0 10px 30px rgba(79, 209, 197, 0.32);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 12px;
+        }
+
+        nav button {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        nav button:hover,
+        nav button.is-active {
+            border-color: var(--accent);
+            color: #0b1120;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            box-shadow: 0 10px 24px rgba(79, 209, 197, 0.24);
+        }
+
+        main {
+            margin-top: 28px;
+            display: grid;
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px clamp(18px, 2vw, 26px);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(6px);
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 26px;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(28px, 5vw, 44px);
+            line-height: 1.1;
+            margin-bottom: 14px;
+        }
+
+        .hero p {
+            color: var(--muted);
+            margin-bottom: 18px;
+            font-size: 16px;
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-weight: 700;
+            color: #0b1120;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .button.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            box-shadow: 0 12px 30px rgba(79, 209, 197, 0.28);
+        }
+
+        .button.secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.25);
+        }
+
+        .hero-card {
+            background: linear-gradient(145deg, rgba(79, 209, 197, 0.12), rgba(255, 255, 255, 0.04));
+            border: 1px solid rgba(79, 209, 197, 0.4);
+            padding: 18px;
+            border-radius: var(--radius);
+        }
+
+        .hero-card strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+
+        .chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .search {
+            flex: 1;
+            min-width: 220px;
+            position: relative;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            outline: none;
+        }
+
+        .search::before {
+            content: '🔍';
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        select {
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            min-width: 150px;
+            outline: none;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.18s ease, border-color 0.18s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+        }
+
+        .card h3 {
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .card small {
+            color: var(--muted);
+        }
+
+        .card p {
+            color: #cbd5e1;
+            margin: 12px 0;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: rgba(79, 209, 197, 0.12);
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .pill.accent {
+            border-color: rgba(79, 209, 197, 0.6);
+            color: var(--accent);
+        }
+
+        .badge-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .favorite {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 8px 10px;
+            cursor: pointer;
+            color: var(--text);
+            transition: all 0.2s ease;
+        }
+
+        .favorite.is-on {
+            background: rgba(79, 209, 197, 0.18);
+            border-color: rgba(79, 209, 197, 0.6);
+            color: var(--accent);
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--muted);
+            padding: 40px 0;
+        }
+
+        footer {
+            color: var(--muted);
+            text-align: center;
+            padding: 32px 0 12px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .panel {
+                padding: 18px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <header>
+            <div class="nav">
+                <a class="brand" href="#home" aria-label="Word Atlas home">
+                    <div class="brand-mark">WA</div>
+                    <span>Word Atlas</span>
+                </a>
+                <nav aria-label="Primary">
+                    <ul>
+                        <li><button data-route="home" class="is-active">Home</button></li>
+                        <li><button data-route="explore">Explore</button></li>
+                        <li><button data-route="favorites">Favorites</button></li>
+                        <li><button data-route="about">About</button></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main id="app"></main>
+        <footer>Crafted in vanilla JS · Responsive and accessible by design</footer>
+    </div>
+
+    <script>
+        const words = [
+            { word: 'Serendipity', type: 'noun', level: 'advanced', meaning: 'The art of finding valuable things unintentionally.', nuance: 'Happy accidents that feel meant to be.', tags: ['chance', 'joy', 'discovery'] },
+            { word: 'Ephemeral', type: 'adjective', level: 'intermediate', meaning: 'Lasting for a very short time.', nuance: 'Moments that vanish as soon as they appear.', tags: ['fleeting', 'time'] },
+            { word: 'Luminary', type: 'noun', level: 'intermediate', meaning: 'A person who inspires or influences others.', nuance: 'A guiding light in a field.', tags: ['inspiration', 'leadership'] },
+            { word: 'Resonant', type: 'adjective', level: 'beginner', meaning: 'Deep and full sound; evokes strong feelings.', nuance: 'Echoes that linger.', tags: ['sound', 'emotion'] },
+            { word: 'Ebullient', type: 'adjective', level: 'advanced', meaning: 'Overflowing with enthusiasm.', nuance: 'Joy that bubbles over.', tags: ['energy', 'emotion'] },
+            { word: 'Meticulous', type: 'adjective', level: 'intermediate', meaning: 'Showing great attention to detail.', nuance: 'Care that borders on artistry.', tags: ['detail', 'craft'] },
+            { word: 'Sonder', type: 'noun', level: 'advanced', meaning: 'The realization that each passerby has a life as vivid as your own.', nuance: 'A quiet empathy.', tags: ['empathy', 'reflection'] },
+            { word: 'Halcyon', type: 'adjective', level: 'advanced', meaning: 'Denoting a period of time in the past that was idyllically happy and peaceful.', nuance: 'Golden, calm days.', tags: ['peace', 'nostalgia'] },
+            { word: 'Verdant', type: 'adjective', level: 'beginner', meaning: 'Green with grass or other rich vegetation.', nuance: 'Lush and lively.', tags: ['nature', 'color'] },
+            { word: 'Axiom', type: 'noun', level: 'beginner', meaning: 'A statement or proposition regarded as being established or self-evidently true.', nuance: 'Truths we build on.', tags: ['logic', 'principle'] }
+        ];
+
+        const state = {
+            route: 'home',
+            search: '',
+            level: 'all',
+            favorites: new Set(JSON.parse(localStorage.getItem('wa-favorites') || '[]')),
+        };
+
+        const app = document.getElementById('app');
+        const navButtons = Array.from(document.querySelectorAll('nav button'));
+
+        function saveFavorites() {
+            localStorage.setItem('wa-favorites', JSON.stringify(Array.from(state.favorites)));
+        }
+
+        function setRoute(route) {
+            state.route = route;
+            navButtons.forEach(btn => btn.classList.toggle('is-active', btn.dataset.route === route));
+            render();
+        }
+
+        function el(tag, attrs = {}, ...children) {
+            const node = document.createElement(tag);
+            Object.entries(attrs).forEach(([key, value]) => {
+                if (key.startsWith('on') && typeof value === 'function') {
+                    node.addEventListener(key.slice(2).toLowerCase(), value);
+                } else if (key === 'className') {
+                    node.className = value;
+                } else {
+                    node.setAttribute(key, value);
+                }
+            });
+            children.flat().forEach(child => {
+                if (child === null || child === undefined) return;
+                node.appendChild(typeof child === 'string' ? document.createTextNode(child) : child);
+            });
+            return node;
+        }
+
+        function renderHome() {
+            return el('section', { className: 'panel hero' },
+                el('div', {},
+                    el('p', { className: 'pill accent' }, 'Curated vocabulary, fast.'),
+                    el('h1', {}, 'A responsible SPA for curious readers'),
+                    el('p', {}, 'Browse nuanced words, pin favorites, and explore meanings — all without leaving the page.'),
+                    el('div', { className: 'cta-row' },
+                        el('button', { className: 'button primary', onClick: () => setRoute('explore') }, 'Start exploring'),
+                        el('button', { className: 'button secondary', onClick: () => setRoute('about') }, 'Why this app')
+                    ),
+                    el('div', { className: 'chips' },
+                        ['Responsive layout', 'Vanilla JS SPA', 'Keyboard-friendly', 'Local favorites'].map(label => el('span', { className: 'chip' }, label))
+                    )
+                ),
+                el('div', { className: 'hero-card' },
+                    el('strong', {}, 'Today’s pick'),
+                    el('div', { className: 'pill' }, 'Word of the moment'),
+                    el('h3', {}, 'Serendipity'),
+                    el('p', {}, 'The art of finding valuable things unintentionally. Happy accidents that feel meant to be.'),
+                    el('div', { className: 'badge-row' },
+                        el('span', { className: 'pill accent' }, 'Advanced'),
+                        el('span', { className: 'pill' }, 'Noun')
+                    )
+                )
+            );
+        }
+
+        function buildFilters() {
+            return el('div', { className: 'filters' },
+                el('div', { className: 'search' },
+                    el('input', {
+                        type: 'search',
+                        placeholder: 'Search words or meanings...',
+                        value: state.search,
+                        onInput: (e) => {
+                            state.search = e.target.value.trim();
+                            render();
+                        },
+                        'aria-label': 'Search words'
+                    })
+                ),
+                el('select', {
+                    value: state.level,
+                    onInput: (e) => {
+                        state.level = e.target.value;
+                        render();
+                    },
+                    'aria-label': 'Filter by level'
+                },
+                    el('option', { value: 'all' }, 'All levels'),
+                    el('option', { value: 'beginner' }, 'Beginner'),
+                    el('option', { value: 'intermediate' }, 'Intermediate'),
+                    el('option', { value: 'advanced' }, 'Advanced')
+                )
+            );
+        }
+
+        function renderCard(item) {
+            const isFav = state.favorites.has(item.word);
+            return el('article', { className: 'card' },
+                el('button', {
+                    className: 'favorite ' + (isFav ? 'is-on' : ''),
+                    onClick: () => {
+                        isFav ? state.favorites.delete(item.word) : state.favorites.add(item.word);
+                        saveFavorites();
+                        render();
+                    },
+                    'aria-pressed': isFav,
+                    'aria-label': 'Toggle favorite ' + item.word
+                }, isFav ? '★ Saved' : '☆ Save'),
+                el('h3', {}, item.word),
+                el('small', {}, `${item.type} • ${item.level}`),
+                el('p', {}, item.meaning),
+                el('div', { className: 'pill' }, item.nuance),
+                el('div', { className: 'tags' }, item.tags.map(tag => el('span', { className: 'tag' }, tag)))
+            );
+        }
+
+        function filteredWords(source = words) {
+            return source.filter(item => {
+                const matchesLevel = state.level === 'all' || item.level === state.level;
+                const text = `${item.word} ${item.meaning} ${item.nuance} ${item.tags.join(' ')}`.toLowerCase();
+                const matchesSearch = text.includes(state.search.toLowerCase());
+                return matchesLevel && matchesSearch;
+            });
+        }
+
+        function renderExplore() {
+            const list = filteredWords();
+            return el('section', { className: 'panel' },
+                el('div', { className: 'filters' }, buildFilters()),
+                el('div', { className: 'cards', role: 'list' },
+                    list.length
+                        ? list.map(renderCard)
+                        : el('div', { className: 'empty' }, 'No matches yet. Try another search or level.')
+                )
+            );
+        }
+
+        function renderFavorites() {
+            const favoriteWords = words.filter(w => state.favorites.has(w.word));
+            const list = filteredWords(favoriteWords);
+            return el('section', { className: 'panel' },
+                el('h2', {}, 'Saved words'),
+                el('p', { style: 'color: var(--muted); margin: 6px 0 14px;' }, 'Favorites sync locally in your browser.'),
+                el('div', { className: 'filters' }, buildFilters()),
+                el('div', { className: 'cards', role: 'list' },
+                    list.length
+                        ? list.map(renderCard)
+                        : el('div', { className: 'empty' }, 'No favorites yet. Mark a word to keep it here.')
+                )
+            );
+        }
+
+        function renderAbout() {
+            return el('section', { className: 'panel' },
+                el('h2', {}, 'About Word Atlas'),
+                el('p', { style: 'color: var(--muted); margin: 10px 0 16px;' }, 'This single-page app runs on vanilla JavaScript with a tiny in-memory router. It keeps favorites in localStorage, ships zero dependencies, and adapts to any screen size.'),
+                el('div', { className: 'badge-row' },
+                    el('span', { className: 'pill accent' }, 'Accessible controls'),
+                    el('span', { className: 'pill' }, 'Responsive grid'),
+                    el('span', { className: 'pill' }, 'No frameworks')
+                ),
+                el('div', { className: 'chips' },
+                    ['Keyboard friendly', 'Fast interactions', 'Meaningful typography', 'Gradient backdrop'].map(text => el('span', { className: 'chip' }, text))
+                )
+            );
+        }
+
+        function render() {
+            app.innerHTML = '';
+            const view = {
+                home: renderHome,
+                explore: renderExplore,
+                favorites: renderFavorites,
+                about: renderAbout
+            }[state.route] || renderHome;
+            app.appendChild(view());
+        }
+
+        navButtons.forEach(btn => btn.addEventListener('click', () => setRoute(btn.dataset.route)));
+
+        // Basic hash-based routing for addressability.
+        window.addEventListener('hashchange', () => {
+            const target = location.hash.replace('#', '') || 'home';
+            if (target && target !== state.route) setRoute(target);
+        });
+
+        // Initial render respecting any hash route.
+        setRoute(location.hash.replace('#', '') || 'home');
+    </script>
+</body>
+</html>
